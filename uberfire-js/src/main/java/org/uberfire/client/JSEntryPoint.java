@@ -9,11 +9,14 @@ import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
 import org.jboss.errai.bus.client.api.ClientMessageBus;
+import org.jboss.errai.common.client.api.Caller;
+import org.jboss.errai.common.client.api.RemoteCallback;
 import org.jboss.errai.ioc.client.api.AfterInitialization;
 import org.jboss.errai.ioc.client.api.EntryPoint;
 import org.jboss.errai.ioc.client.container.IOC;
 import org.jboss.errai.ioc.client.container.SyncBeanManager;
 import org.jboss.errai.ioc.client.container.SyncBeanManagerImpl;
+import org.uberfire.backend.plugin.RuntimePluginsService;
 import org.uberfire.client.mvp.Activity;
 import org.uberfire.client.mvp.ActivityBeansCache;
 import org.uberfire.client.mvp.PerspectiveActivity;
@@ -21,7 +24,6 @@ import org.uberfire.client.mvp.PlaceManager;
 import org.uberfire.client.mvp.SplashScreenActivity;
 import org.uberfire.client.mvp.WorkbenchScreenActivity;
 import org.uberfire.client.workbench.Workbench;
-import org.uberfire.mvp.ParameterizedCommand;
 import org.uberfire.mvp.impl.DefaultPlaceRequest;
 
 import com.google.gwt.core.client.JavaScriptObject;
@@ -34,7 +36,7 @@ public class JSEntryPoint {
     private Workbench workbench;
 
     @Inject
-    private RuntimePluginsServiceProxy runtimePluginsService;
+    private Caller<RuntimePluginsService> runtimePluginsService;
 
     @Inject
     private ClientMessageBus bus;
@@ -47,15 +49,15 @@ public class JSEntryPoint {
 
     @AfterInitialization
     public void setup() {
-        runtimePluginsService.listFramworksContent( new ParameterizedCommand<Collection<String>>() {
+        runtimePluginsService.call( new RemoteCallback<Collection<String>>() {
             @Override
-            public void execute( final Collection<String> response ) {
+            public void callback( Collection<String> response ) {
                 for ( final String s : response ) {
                     ScriptInjector.fromString( s ).setWindow( TOP_WINDOW ).inject();
                 }
-                runtimePluginsService.listPluginsContent( new ParameterizedCommand<Collection<String>>() {
+                runtimePluginsService.call( new RemoteCallback<Collection<String>>() {
                     @Override
-                    public void execute( final Collection<String> response ) {
+                    public void callback( Collection<String> response ) {
                         try {
                             for ( final String s : response ) {
                                 ScriptInjector.fromString( s ).setWindow( TOP_WINDOW ).inject();
@@ -63,11 +65,10 @@ public class JSEntryPoint {
                         } finally {
                             workbench.removeStartupBlocker( JSEntryPoint.class );
                         }
-
                     }
-                } );
+                } ).listPluginsContent();
             }
-        } );
+        }).listFramworksContent();
     }
 
     public static void registerPlugin( final Object _obj ) {

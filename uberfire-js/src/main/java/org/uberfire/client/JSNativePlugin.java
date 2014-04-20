@@ -2,8 +2,14 @@ package org.uberfire.client;
 
 import java.util.Collection;
 import java.util.Collections;
+
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
+
+import org.jboss.errai.common.client.api.Caller;
+import org.jboss.errai.common.client.api.RemoteCallback;
+import org.uberfire.backend.plugin.RuntimePluginsService;
+import org.uberfire.mvp.PlaceRequest;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
@@ -11,14 +17,12 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.SimplePanel;
-import org.uberfire.mvp.ParameterizedCommand;
-import org.uberfire.mvp.PlaceRequest;
 
 @Dependent
 public class JSNativePlugin {
 
     @Inject
-    protected RuntimePluginsServiceProxy runtimePluginsService;
+    protected Caller<RuntimePluginsService> runtimePluginsService;
 
     protected JavaScriptObject obj;
     protected Element element = null;
@@ -150,12 +154,13 @@ public class JSNativePlugin {
         if ( content != null ) {
             element = new HTML( new SafeHtmlBuilder().appendHtmlConstant( content ).toSafeHtml() ).getElement();
         } else if ( contentUrl != null ) {
-            runtimePluginsService.getTemplateContent( contentUrl, new ParameterizedCommand<String>() {
+            runtimePluginsService.call( new RemoteCallback<String>() {
                 @Override
-                public void execute( String parameter ) {
-                    element = new HTML( new SafeHtmlBuilder().appendHtmlConstant( parameter ).toSafeHtml() ).getElement();
+                public void callback( String response ) {
+                    element = new HTML( new SafeHtmlBuilder().appendHtmlConstant( response ).toSafeHtml() ).getElement();
                 }
-            } );
+
+            }).getTemplateContent( contentUrl );
         } else {
             element = null;
         }
