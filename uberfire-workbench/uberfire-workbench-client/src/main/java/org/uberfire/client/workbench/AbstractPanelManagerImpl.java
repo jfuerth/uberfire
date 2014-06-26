@@ -1,15 +1,14 @@
 package org.uberfire.client.workbench;
 
-import static org.uberfire.commons.validation.PortablePreconditions.*;
-
 import java.util.HashMap;
 import java.util.Map;
-
 import javax.enterprise.event.Event;
 import javax.enterprise.event.Observes;
 import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 
+import com.google.gwt.user.client.ui.HasWidgets;
+import com.google.gwt.user.client.ui.IsWidget;
 import org.jboss.errai.ioc.client.container.SyncBeanManager;
 import org.uberfire.client.mvp.PlaceManager;
 import org.uberfire.client.mvp.UIPart;
@@ -23,7 +22,6 @@ import org.uberfire.client.workbench.events.PlaceLostFocusEvent;
 import org.uberfire.client.workbench.events.RestorePlaceEvent;
 import org.uberfire.client.workbench.events.SelectPlaceEvent;
 import org.uberfire.client.workbench.panels.WorkbenchPanelPresenter;
-import org.uberfire.client.workbench.panels.support.SelectablePanels;
 import org.uberfire.client.workbench.part.WorkbenchPartPresenter;
 import org.uberfire.client.workbench.widgets.statusbar.WorkbenchStatusBarPresenter;
 import org.uberfire.mvp.PlaceRequest;
@@ -35,8 +33,7 @@ import org.uberfire.workbench.model.Position;
 import org.uberfire.workbench.model.impl.PanelDefinitionImpl;
 import org.uberfire.workbench.model.menu.Menus;
 
-import com.google.gwt.user.client.ui.HasWidgets;
-import com.google.gwt.user.client.ui.IsWidget;
+import static org.uberfire.commons.validation.PortablePreconditions.*;
 
 /**
  * Base class for implementations of PanelManager. This class relies on ErraiIOC field injection, so all subclasses must
@@ -114,22 +111,6 @@ public abstract class AbstractPanelManagerImpl implements PanelManager  {
     public PanelDefinition getRoot() {
         return this.rootPanelDef;
     }
-
-   /* @Override
-    public void setHeaderContents( List<Header> headers ) {
-        final WorkbenchLayout workbenchLayout = layoutSelection.get();
-        for ( Header h : headers ) {
-            workbenchLayout.addMargin( Header.class, h );
-        }
-    }
-
-    @Override
-    public void setFooterContents( List<Footer> footers ) {
-        final WorkbenchLayout workbenchLayout = layoutSelection.get();
-        for ( Footer f : footers ) {
-            workbenchLayout.addMargin( Footer.class, f );
-        }
-    }  */
 
     @Override
     public void addWorkbenchPart( final PlaceRequest place,
@@ -249,16 +230,6 @@ public abstract class AbstractPanelManagerImpl implements PanelManager  {
                 if (part.getPlace().equals(place)) {
                     panelPresenter.selectPart(part);
                     onPanelFocus(e.getKey());
-
-                    // notify parent panels
-                    PanelDefinition parentPanel = e.getKey().getParent();
-                    while(parentPanel!=null) {
-                        WorkbenchPanelPresenter parentPresenter = mapPanelDefinitionToPresenter.get(parentPanel);
-                        if (parentPresenter != null && parentPresenter instanceof SelectablePanels) {
-                            ((SelectablePanels) parentPresenter).onSelect(part.getParentPanel());
-                        }
-                        parentPanel = parentPanel.getParent();
-                    }
                 }
             }
         }

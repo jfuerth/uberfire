@@ -1,6 +1,7 @@
 package org.uberfire.client.workbench.panels.support;
 
 import com.google.gwt.user.client.ui.Widget;
+import org.uberfire.client.workbench.panels.impl.LayoutPanelView;
 import org.uberfire.commons.data.Pair;
 import org.uberfire.workbench.model.PartDefinition;
 
@@ -9,8 +10,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @author Heiko Braun
- * @date 11/06/14
+ * Manages part instances on behalf of {@link LayoutPanelView}.
+ * It's needed to retain each parts state across perspective changes.
  */
 @ApplicationScoped
 public class PartManager {

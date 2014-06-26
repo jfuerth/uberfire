@@ -20,19 +20,18 @@ import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import com.google.gwt.user.client.ui.SplitLayoutPanel;
 import org.uberfire.client.workbench.PanelManager;
 import org.uberfire.client.workbench.events.MaximizePlaceEvent;
 import org.uberfire.client.workbench.events.MinimizePlaceEvent;
-import org.uberfire.client.workbench.panels.WorkbenchPanelView;
-import org.uberfire.client.workbench.panels.support.SelectablePanels;
-import org.uberfire.workbench.model.PanelDefinition;
-import org.uberfire.workbench.model.Position;
+import org.uberfire.workbench.model.CompassPosition;
 
 /**
- * @author Heiko Braun
+ * SplitLayoutPanelPresenter and {@link SplitLayoutPanelView} arrange panels using a GWT {@link SplitLayoutPanel}.
+ * As such it only supports {@link CompassPosition#WEST} and {@link CompassPosition#CENTER}
  */
 @Dependent
-public class SplitLayoutPanelPresenter extends AbstractWorkbenchPanelPresenter<SplitLayoutPanelPresenter> implements SelectablePanels {
+public class SplitLayoutPanelPresenter extends AbstractWorkbenchPanelPresenter<SplitLayoutPanelPresenter> {
 
     @Inject
     public SplitLayoutPanelPresenter(@Named("SplitLayoutPanelView") final SplitLayoutPanelView view,
@@ -46,10 +45,4 @@ public class SplitLayoutPanelPresenter extends AbstractWorkbenchPanelPresenter<S
     protected SplitLayoutPanelPresenter asPresenterType() {
         return this;
     }
-
-    @Override
-    public void onSelect(PanelDefinition panelDefinition) {
-        ((SplitLayoutPanelView) getPanelView()).selectPanel(panelDefinition);
-    }
-
 }
