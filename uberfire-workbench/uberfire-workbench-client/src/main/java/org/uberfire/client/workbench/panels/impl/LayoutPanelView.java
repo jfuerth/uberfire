@@ -60,12 +60,12 @@ public class LayoutPanelView implements WorkbenchPanelView<LayoutPanelPresenter>
     @Override
     public void addPanel(PanelDefinition panel, WorkbenchPanelView view, Position position) {
         // invoked when this presenter manages a perspective itself (is root)
+        layout.clear();
         layout.add(view);
     }
 
     @Override
     public void removePanel() {
-
     }
 
     // ------------------------
