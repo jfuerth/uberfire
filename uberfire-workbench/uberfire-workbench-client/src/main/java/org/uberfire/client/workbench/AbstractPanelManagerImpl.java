@@ -90,6 +90,7 @@ public abstract class AbstractPanelManagerImpl implements PanelManager  {
             throw new IllegalStateException( "Can't replace current root panel because it is not empty. The following panels remain: " + mapPanelDefinitionToPresenter );
         }
 
+        // TODO Copy & paste error?
         if ( !mapPartDefinitionToPresenter.isEmpty() ) {
             throw new IllegalStateException( "Can't replace current root panel because it is not empty. The following parts remain: " + mapPartDefinitionToPresenter );
         }
@@ -336,10 +337,23 @@ public abstract class AbstractPanelManagerImpl implements PanelManager  {
      */
     private void removePanel( final PanelDefinition panelToRemove,
                               final PanelDefinition panelToSearch ) {
+        final PanelDefinition centerChild = panelToSearch.getChild( CompassPosition.CENTER );
         final PanelDefinition northChild = panelToSearch.getChild( CompassPosition.NORTH );
         final PanelDefinition southChild = panelToSearch.getChild( CompassPosition.SOUTH );
         final PanelDefinition eastChild = panelToSearch.getChild( CompassPosition.EAST );
         final PanelDefinition westChild = panelToSearch.getChild( CompassPosition.WEST );
+
+        if (centerChild != null) {
+            if ( centerChild.equals( panelToRemove ) ) {
+                mapPanelDefinitionToPresenter.remove( centerChild );
+                removePanel( panelToRemove,
+                             panelToSearch,
+                             CompassPosition.CENTER );
+            } else {
+                removePanel( panelToRemove,
+                             centerChild );
+            }
+        }
         if ( northChild != null ) {
             if ( northChild.equals( panelToRemove ) ) {
                 mapPanelDefinitionToPresenter.remove( northChild );
