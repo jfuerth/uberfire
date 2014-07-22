@@ -15,22 +15,19 @@
  */
 package org.uberfire.client.workbench.panels.impl;
 
+import javax.enterprise.context.Dependent;
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.Widget;
-import org.uberfire.client.mvp.PlaceManager;
 import org.uberfire.client.workbench.panels.WorkbenchPanelView;
 import org.uberfire.client.workbench.panels.support.PartManager;
 import org.uberfire.client.workbench.part.WorkbenchPartPresenter;
 import org.uberfire.workbench.model.PanelDefinition;
 import org.uberfire.workbench.model.PartDefinition;
 import org.uberfire.workbench.model.Position;
-
-import javax.enterprise.context.Dependent;
-import javax.inject.Inject;
-import javax.inject.Named;
-import java.util.List;
-import java.util.Set;
 
 /**
  * A simple {@link LayoutPanel} presenter. Can be used for both perspectives and panels.
@@ -39,20 +36,13 @@ import java.util.Set;
 @Named("LayoutPanelView")
 public class LayoutPanelView implements WorkbenchPanelView<LayoutPanelPresenter> {
 
-    private LayoutPanel layout;
-
-    private LayoutPanelPresenter presenter;
-
-    @Inject
-    private PlaceManager placeManager;
-
-    @Inject
-    private PartManager partManager;
+    protected LayoutPanel layout;
+    protected LayoutPanelPresenter presenter;
+    @Inject protected PartManager partManager;
 
     public LayoutPanelView() {
-
-        layout = new LayoutPanel();
-        layout.setStyleName("fill-layout");
+        this.layout = new LayoutPanel();
+        this.layout.setStyleName("fill-layout");
     }
 
     // ------------------------
