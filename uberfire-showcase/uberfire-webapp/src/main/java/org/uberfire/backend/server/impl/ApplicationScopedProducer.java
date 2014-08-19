@@ -11,6 +11,7 @@ import org.uberfire.commons.services.cdi.Startup;
 import org.uberfire.commons.services.cdi.StartupType;
 import org.uberfire.io.IOService;
 import org.uberfire.io.impl.IOServiceNio2WrapperImpl;
+import org.uberfire.security.authz.AuthorizationManager;
 
 @Startup(StartupType.BOOTSTRAP)
 @ApplicationScoped
@@ -21,9 +22,12 @@ public class ApplicationScopedProducer {
 
     private IOService ioService;
 
+    @Inject AuthorizationManager testing;
+
     @PostConstruct
     public void setup() {
         ioService  = new IOServiceNio2WrapperImpl("1", watchService);
+        System.out.println("Got AuthorizationManager " + testing);
     }
 
     @Produces
